@@ -70,7 +70,25 @@ class PhotoListViewController: UIViewController {
                     self?.listState.send(.SearchHistory)
                     self?.applySearchQueriesToSnapshot(searchQueries: self?.viewModel.previousSearchQueries ?? [String]())
                 case .searchQueryFailed(let error):
-                    let alert = UIAlertController(title: "Query Failed", message: error.localizedDescription, preferredStyle: .alert)
+                    guard let apiError = error as? APIError else { return }
+                    var errorMessage = "Unkown Error"
+                    switch(apiError){
+                    case .serviceUnavailable:
+                        errorMessage = "Flickr Service Unavailable"
+                    case .apiNotAvailable:
+                        errorMessage = "Flickr API Not Available"
+                    case .invalidApiKey:
+                        errorMessage = "Invalid Flickr API Key"
+                    case .invalidUrl:
+                        errorMessage = "Invalid Flickr Url"
+                    case .invalidResponse:
+                        errorMessage = "Invalid Response"
+                    case .networkError:
+                        errorMessage = "Network error, please check your connection"
+                    case .customError:
+                        errorMessage = error.localizedDescription
+                    }
+                    let alert = UIAlertController(title: "Query Failed", message: errorMessage, preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "OK", style: .default))
                     self?.present(alert, animated: true)
                 case .showSearchQuery:
