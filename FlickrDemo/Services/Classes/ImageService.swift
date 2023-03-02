@@ -26,6 +26,7 @@ class ImageService : ImageServiceType {
             }
             return imageFromData
         }
+        .subscribe(on: DispatchQueue.global())
         .receive(on: DispatchQueue.main)
         .replaceError(with: nil)
         .eraseToAnyPublisher()

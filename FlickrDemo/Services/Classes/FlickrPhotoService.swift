@@ -16,12 +16,11 @@ class FlickrPhotoService : FlickrPhotoServiceType {
         self.session = session
     }
     
-    func getSearchResults(query : String, page : Int = 1) -> AnyPublisher<[FlickrPhoto], Error> {
+    func getSearchResults(query : String, page : Int = 1) -> AnyPublisher<(Int,[FlickrPhoto]), Error> {
         guard let url = buildSearchResultUrl(text: query,page: page) else {
             return Fail(error: APIError.invalidUrl).eraseToAnyPublisher()
         }
-        
-        print(url.absoluteString)
+
         return URLSession.shared.dataTaskPublisher(for: url)
             .mapError { error -> Error in
                 return APIError.networkError
@@ -46,8 +45,13 @@ class FlickrPhotoService : FlickrPhotoServiceType {
                     }
                 }
                 
-                return searchResult.photos?.photo ?? [FlickrPhoto]()
+                return (
+                    (searchResult.photos?.pages ?? 0) ,
+                    (searchResult.photos?.photo ?? [FlickrPhoto]())
+                )
             }
+            .subscribe(on: DispatchQueue.global())
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
     

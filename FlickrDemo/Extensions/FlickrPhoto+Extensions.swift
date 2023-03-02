@@ -10,7 +10,7 @@ import Foundation
 extension FlickrPhoto {
     
     func smallSizePhotoUrl() -> URL? {
-        return urlForPhoto(size: "t")
+        return urlForPhoto(size: "n")
     }
     
     func bigSizePhotoUrl() -> URL? {

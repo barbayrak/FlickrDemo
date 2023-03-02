@@ -9,5 +9,5 @@ import Foundation
 import Combine
 
 protocol FlickrPhotoServiceType {
-    func getSearchResults(query : String, page : Int) -> AnyPublisher<[FlickrPhoto],Error>
+    func getSearchResults(query : String, page : Int) -> AnyPublisher<(Int,[FlickrPhoto]),Error>
 }
