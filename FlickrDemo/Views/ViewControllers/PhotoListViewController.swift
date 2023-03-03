@@ -194,6 +194,8 @@ extension PhotoListViewController : UICollectionViewDataSource,UICollectionViewD
             photoDetailVC.modalPresentationStyle = .automatic
             self.present(photoDetailVC, animated: true)
         case .SearchHistory:
+            listState.send(.PhotoResults)
+            applyPhotosToSnapshot(photos:[FlickrPhoto]())
             let searchQuery = viewModel.previousSearchQueries[indexPath.row]
             searchBar.text = searchQuery
             eventInput.send(.searchTapped(query: searchQuery))
