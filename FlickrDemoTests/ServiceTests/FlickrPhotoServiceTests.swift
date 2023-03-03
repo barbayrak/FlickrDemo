@@ -30,7 +30,7 @@ final class FlickrPhotoServiceTests: XCTestCase {
                 XCTFail("Flickr Search results failed with error \(error.localizedDescription)")
             }
         } receiveValue: { photos in
-            XCTAssertGreaterThan(photos.count, 0, "Search Results should not be empty")
+            XCTAssertGreaterThan(photos.1.count, 0, "Search Results should not be empty")
         }.store(in: &cancellables)
         waitForExpectations(timeout: 5.0)
     }
@@ -46,7 +46,7 @@ final class FlickrPhotoServiceTests: XCTestCase {
                 XCTFail("Flickr Search results failed with error \(error.localizedDescription)")
             }
         } receiveValue: { photos in
-            XCTAssertEqual(photos.count, 0, "Search Results should be empty")
+            XCTAssertEqual(photos.1.count, 0, "Search Results should be empty")
         }.store(in: &cancellables)
         waitForExpectations(timeout: 5.0)
     }
@@ -66,7 +66,7 @@ final class FlickrPhotoServiceTests: XCTestCase {
         } receiveValue: { photos in
             XCTFail("Flickr Search results should not receive response with wront api key ")
         }.store(in: &cancellables)
-        waitForExpectations(timeout: 55.0)
+        waitForExpectations(timeout: 5.0)
     }
 
 }

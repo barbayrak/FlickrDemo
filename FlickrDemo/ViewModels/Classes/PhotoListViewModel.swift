@@ -25,19 +25,15 @@ class PhotoListViewModel: ObservableObject,PhotoListViewModelType {
     
     init(flickrService : FlickrPhotoServiceType = FlickrPhotoService()){
         self.flickrService = flickrService
-        self.loadPreviousSearchQueries()
     }
     
     func transform(input : AnyPublisher<PhotoListViewModelInput, Never>) -> AnyPublisher<PhotoListViewModelOutput, Never> {
-        //Free up cancellables
-        cancellables.forEach({ $0.cancel() })
-        cancellables.removeAll()
-        
+    
         input
             .sink { [weak self] input in
                 switch(input){
                 case .viewDidAppear:
-                    break
+                    self?.loadPreviousSearchQueries()
                 case .searchChanged(let query):
                     if(query.count < 2){
                         self?.outputEvents.send(.showQueryHistory)
@@ -50,7 +46,6 @@ class PhotoListViewModel: ObservableObject,PhotoListViewModelType {
                 case .searchTapped(let query):
                     self?.currentPage = 1
                     self?.searchQuery = query
-                    self?.outputEvents.send(.showSearchQuery)
                 }
             }
             .store(in: &cancellables)
@@ -103,6 +98,7 @@ extension PhotoListViewModel {
     
     func loadPreviousSearchQueries(){
         previousSearchQueries = UserDefaults.standard.stringArray(forKey: "searchQueries") ?? [String]()
+        outputEvents.send(.showQueryHistory)
     }
     
     func addSearchQueryIfNotExists(query : String) {

@@ -36,7 +36,7 @@ final class FlickrPhotoTests: XCTestCase {
     func testSmallSizePhotoUrl() throws {
         let photo = FlickrPhoto(id: "kaanId", owner: "kaanOwner", secret: "kaanSecret", server: "kaanServer", title: "kaanTitle")
         let smallSizeAbsoluteUrl = photo.smallSizePhotoUrl()?.absoluteString
-        let expectedAbsoluteUrl = "https://live.staticflickr.com/kaanServer/kaanId_kaanSecret_t.jpg"
+        let expectedAbsoluteUrl = "https://live.staticflickr.com/kaanServer/kaanId_kaanSecret_n.jpg"
         XCTAssertEqual(smallSizeAbsoluteUrl, expectedAbsoluteUrl, "FlickrPhoto small size url building error")
     }
     
@@ -45,6 +45,26 @@ final class FlickrPhotoTests: XCTestCase {
         let bigSizeAbsoluteUrl = photo.bigSizePhotoUrl()?.absoluteString
         let expectedAbsoluteUrl = "https://live.staticflickr.com/kaanServer/kaanId_kaanSecret_b.jpg"
         XCTAssertEqual(bigSizeAbsoluteUrl, expectedAbsoluteUrl, "FlickrPhoto big size url building error")
+    }
+    
+    func testHash() {
+        let photo1 = FlickrPhoto(id: "kaanId", owner: "kaanOwner", secret: "kaanSecret", server: "kaanServer", title: "kaanTitle")
+        var hasher = Hasher()
+        photo1.hash(into: &hasher)
+        let hash1 = hasher.finalize()
+
+        let photo2 = FlickrPhoto(id: "kaanId2", owner: "kaanOwner2", secret: "kaanSecret2", server: "kaanServer2", title: "kaanTitle2")
+        var hasher2 = Hasher()
+        photo2.hash(into: &hasher2)
+        let hash2 = hasher2.finalize()
+
+        XCTAssertNotEqual(hash1, hash2)
+    }
+    
+    func testEquatable() {
+        let photo1 = FlickrPhoto(id: "kaanId", owner: "kaanOwner", secret: "kaanSecret", server: "kaanServer", title: "kaanTitle")
+        let photo2 = FlickrPhoto(id: "kaanId2", owner: "kaanOwner2", secret: "kaanSecret2", server: "kaanServer2", title: "kaanTitle2")
+        XCTAssertNotEqual(photo1, photo2)
     }
 
 }
